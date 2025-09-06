@@ -2,11 +2,10 @@ package system
 
 import (
 	"m3g4p0p/spring/game/component"
+	"m3g4p0p/spring/game/util"
 
-	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
-	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/filter"
 )
 
@@ -22,15 +21,15 @@ func NewPlayerSystem() PlayerSystem {
 }
 
 func (t PlayerSystem) Update(ecs *ecs.ECS) {
-	if !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+	pos, ok := util.ActivePosition()
+
+	if !ok {
 		return
 	}
 
-	x, y := ebiten.CursorPosition()
-
 	for entry := range t.query.Iter(ecs.World) {
 		component.Target.Set(entry, &component.TargetData{
-			Vec2: math.NewVec2(float64(x), float64(y)),
+			Vec2: pos,
 		})
 	}
 }
