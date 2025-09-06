@@ -1,6 +1,7 @@
 package game
 
 import (
+	"log/slog"
 	"sync"
 
 	"m3g4p0p/spring/game/factory"
@@ -11,10 +12,9 @@ import (
 	eventslib "github.com/yohamta/donburi/features/events"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
-const scale = 2
+const scale = 1
 
 type Game struct {
 	*ecslib.ECS
@@ -24,12 +24,12 @@ type Game struct {
 func (g *Game) Update() error {
 	g.ECS.Update()
 	eventslib.ProcessAllEvents(g.World)
+	slog.Info("hello world")
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.ECS.Draw(screen)
-	ebitenutil.DebugPrint(screen, "Hello, World!")
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -46,6 +46,7 @@ func New() *Game {
 	ecs.AddSystem(system.NewTiltSystem().Update)
 	ecs.AddSystem(system.NewPlayerSystem().Update)
 	ecs.AddRenderer(ecslib.LayerDefault, system.NewRenderSystem().Draw)
+	ecs.AddRenderer(ecslib.LayerDefault, FlushLogs)
 
 	factory.CreatePlayer(world)
 

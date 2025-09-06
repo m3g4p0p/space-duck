@@ -6,6 +6,7 @@ import (
 	"m3g4p0p/spring/game/util"
 
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 )
 
@@ -22,5 +23,6 @@ func CreatePlayer(world donburi.World) *donburi.Entry {
 	))
 
 	component.Sprite.Set(entry, playerSprite)
+	transform.SetWorldScale(entry, math.NewVec2(0.5, 0.5))
 	return entry
 }
