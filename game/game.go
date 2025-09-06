@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"sync"
 
 	"m3g4p0p/spring/game/factory"
@@ -14,6 +13,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
+
+const scale = 2
 
 type Game struct {
 	*ecslib.ECS
@@ -28,12 +29,11 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.ECS.Draw(screen)
-	// ebitenutil.DebugPrint(screen, "Hello, World!")
-	ebitenutil.DebugPrint(screen, fmt.Sprint(ebiten.TPS()))
+	ebitenutil.DebugPrint(screen, "Hello, World!")
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return outsideWidth, outsideHeight
+	return outsideWidth * scale, outsideHeight * scale
 }
 
 func New() *Game {
