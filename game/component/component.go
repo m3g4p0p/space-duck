@@ -19,5 +19,6 @@ var (
 	Sprite   = donburi.NewComponentType[ebiten.Image]()
 	Target   = donburi.NewComponentType[TargetData]()
 	Velocity = donburi.NewComponentType[VelocityData]()
+	Tilt     = donburi.NewComponentType[struct{}]()
 	Player   = donburi.NewComponentType[struct{}]()
 )

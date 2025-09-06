@@ -17,6 +17,7 @@ func CreatePlayer(world donburi.World) *donburi.Entry {
 		component.Player,
 		component.Target,
 		component.Velocity,
+		component.Tilt,
 		transform.Transform,
 	))
 
