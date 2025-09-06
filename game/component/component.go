@@ -14,11 +14,15 @@ type VelocityData struct {
 	math.Vec2
 }
 
+type TiltData struct {
+	AbsMax float64
+}
+
 // var MessageComponent = donburi.NewComponentType[pubsub.Message]()
 var (
 	Sprite   = donburi.NewComponentType[ebiten.Image]()
 	Target   = donburi.NewComponentType[TargetData]()
 	Velocity = donburi.NewComponentType[VelocityData]()
-	Tilt     = donburi.NewComponentType[struct{}]()
+	Tilt     = donburi.NewComponentType[TiltData]()
 	Player   = donburi.NewComponentType[struct{}]()
 )

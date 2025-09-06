@@ -22,7 +22,13 @@ func CreatePlayer(world donburi.World) *donburi.Entry {
 		transform.Transform,
 	))
 
+	tilt := component.TiltData{
+		AbsMax: math.ToRadians(45),
+	}
+
 	component.Sprite.Set(entry, playerSprite)
+	component.Tilt.SetValue(entry, tilt)
 	transform.SetWorldScale(entry, math.NewVec2(0.5, 0.5))
+
 	return entry
 }

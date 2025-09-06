@@ -5,7 +5,6 @@ import (
 
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
-	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 )
@@ -27,7 +26,8 @@ func NewTiltSystem() TiltSystem {
 func (t TiltSystem) Update(ecs *ecs.ECS) {
 	for entry := range t.query.Iter(ecs.World) {
 		vel := component.Velocity.Get(entry)
-		angle := vel.Angle(math.Vec2{})
+		maxTilt := component.Tilt.Get(entry).AbsMax
+		angle := max(-maxTilt, min(maxTilt, vel.X/1000))
 
 		transform.SetWorldRotation(entry, angle)
 	}
