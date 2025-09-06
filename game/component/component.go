@@ -14,4 +14,5 @@ type TargetData struct {
 var (
 	Sprite = donburi.NewComponentType[ebiten.Image]()
 	Target = donburi.NewComponentType[TargetData]()
+	Player = donburi.NewComponentType[struct{}]()
 )

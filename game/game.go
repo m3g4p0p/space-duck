@@ -44,13 +44,18 @@ func New() *Game {
 
 	ebiten.SetWindowTitle("Hello, World!")
 	ecs.AddSystem(system.NewTargetSystem().Update)
+	ecs.AddSystem(system.NewPlayerSystem().Update)
 	ecs.AddRenderer(ecslib.LayerDefault, system.NewRenderSystem().Draw)
 
-	entry := world.Entry(world.Create(component.Sprite, transform.Transform))
+	entry := world.Entry(world.Create(
+		component.Sprite,
+		component.Player,
+		component.Target,
+		transform.Transform,
+	))
+
 	component.Sprite.Set(entry, util.CreateCircle(10))
-	transform.Transform.SetValue(entry, transform.TransformData{
-		LocalPosition: math.NewVec2(100, 100),
-	})
+	component.Target.Set(entry, &component.TargetData{Vec2: math.NewVec2(100, 100)})
 
 	return game
 }
