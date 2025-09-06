@@ -43,6 +43,7 @@ func New() *Game {
 	game := &Game{ECS: ecs}
 
 	ebiten.SetWindowTitle("Hello, World!")
+	ecs.AddSystem(system.NewTargetSystem().Update)
 	ecs.AddRenderer(ecslib.LayerDefault, system.NewRenderSystem().Draw)
 
 	entry := world.Entry(world.Create(component.Sprite, transform.Transform))
