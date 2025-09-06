@@ -10,9 +10,14 @@ type TargetData struct {
 	math.Vec2
 }
 
+type VelocityData struct {
+	math.Vec2
+}
+
 // var MessageComponent = donburi.NewComponentType[pubsub.Message]()
 var (
-	Sprite = donburi.NewComponentType[ebiten.Image]()
-	Target = donburi.NewComponentType[TargetData]()
-	Player = donburi.NewComponentType[struct{}]()
+	Sprite   = donburi.NewComponentType[ebiten.Image]()
+	Target   = donburi.NewComponentType[TargetData]()
+	Velocity = donburi.NewComponentType[VelocityData]()
+	Player   = donburi.NewComponentType[struct{}]()
 )

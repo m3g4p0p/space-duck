@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"sync"
 
 	"m3g4p0p/spring/game/component"
@@ -10,7 +11,6 @@ import (
 	"github.com/yohamta/donburi"
 	ecslib "github.com/yohamta/donburi/ecs"
 	eventslib "github.com/yohamta/donburi/features/events"
-	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -30,7 +30,8 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.ECS.Draw(screen)
-	ebitenutil.DebugPrint(screen, "Hello, World!")
+	// ebitenutil.DebugPrint(screen, "Hello, World!")
+	ebitenutil.DebugPrint(screen, fmt.Sprint(ebiten.TPS()))
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -51,11 +52,11 @@ func New() *Game {
 		component.Sprite,
 		component.Player,
 		component.Target,
+		component.Velocity,
 		transform.Transform,
 	))
 
 	component.Sprite.Set(entry, util.CreateCircle(10))
-	component.Target.Set(entry, &component.TargetData{Vec2: math.NewVec2(100, 100)})
 
 	return game
 }
