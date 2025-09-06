@@ -23,6 +23,7 @@ func (s RenderSystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
 
 		op.GeoM.Translate(util.ImageSize(sprite).DivScalar(-2).XY())
 		op.GeoM.Rotate(transform.WorldRotation(e) + angle)
+		op.GeoM.Scale(transform.WorldScale(e).XY())
 		op.GeoM.Translate(transform.WorldPosition(e).XY())
 		image.DrawImage(sprite, op)
 	})

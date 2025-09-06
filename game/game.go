@@ -14,7 +14,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-const scale = 2
+const scale = 1
 
 type Game struct {
 	*ecslib.ECS
