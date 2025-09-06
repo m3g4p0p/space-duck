@@ -11,7 +11,7 @@ import (
 
 var (
 	buf    bytes.Buffer
-	logger = slog.New(slog.NewJSONHandler(&buf, nil))
+	logger = slog.New(slog.NewTextHandler(&buf, nil))
 )
 
 func init() {
