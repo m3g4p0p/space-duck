@@ -4,14 +4,12 @@ import (
 	"fmt"
 	"sync"
 
-	"m3g4p0p/spring/game/component"
+	"m3g4p0p/spring/game/factory"
 	"m3g4p0p/spring/game/system"
-	"m3g4p0p/spring/game/util"
 
 	"github.com/yohamta/donburi"
 	ecslib "github.com/yohamta/donburi/ecs"
 	eventslib "github.com/yohamta/donburi/features/events"
-	"github.com/yohamta/donburi/features/transform"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -48,15 +46,7 @@ func New() *Game {
 	ecs.AddSystem(system.NewPlayerSystem().Update)
 	ecs.AddRenderer(ecslib.LayerDefault, system.NewRenderSystem().Draw)
 
-	entry := world.Entry(world.Create(
-		component.Sprite,
-		component.Player,
-		component.Target,
-		component.Velocity,
-		transform.Transform,
-	))
-
-	component.Sprite.Set(entry, util.CreateCircle(10))
+	factory.CreatePlayer(world)
 
 	return game
 }
