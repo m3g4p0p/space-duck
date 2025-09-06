@@ -1,21 +1,20 @@
 package game
 
 import (
+	"log/slog"
 	"sync"
 
-	"m3g4p0p/spring/game/component"
+	"m3g4p0p/spring/game/factory"
 	"m3g4p0p/spring/game/system"
-	"m3g4p0p/spring/game/util"
 
 	"github.com/yohamta/donburi"
 	ecslib "github.com/yohamta/donburi/ecs"
 	eventslib "github.com/yohamta/donburi/features/events"
-	"github.com/yohamta/donburi/features/math"
-	"github.com/yohamta/donburi/features/transform"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
+
+const scale = 1
 
 type Game struct {
 	*ecslib.ECS
@@ -25,16 +24,16 @@ type Game struct {
 func (g *Game) Update() error {
 	g.ECS.Update()
 	eventslib.ProcessAllEvents(g.World)
+	slog.Info("hello world")
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.ECS.Draw(screen)
-	ebitenutil.DebugPrint(screen, "Hello, World!")
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return outsideWidth, outsideHeight
+	return outsideWidth * scale, outsideHeight * scale
 }
 
 func New() *Game {
@@ -44,18 +43,12 @@ func New() *Game {
 
 	ebiten.SetWindowTitle("Hello, World!")
 	ecs.AddSystem(system.NewTargetSystem().Update)
+	ecs.AddSystem(system.NewTiltSystem().Update)
 	ecs.AddSystem(system.NewPlayerSystem().Update)
 	ecs.AddRenderer(ecslib.LayerDefault, system.NewRenderSystem().Draw)
+	ecs.AddRenderer(ecslib.LayerDefault, FlushLogs)
 
-	entry := world.Entry(world.Create(
-		component.Sprite,
-		component.Player,
-		component.Target,
-		transform.Transform,
-	))
-
-	component.Sprite.Set(entry, util.CreateCircle(10))
-	component.Target.Set(entry, &component.TargetData{Vec2: math.NewVec2(100, 100)})
+	factory.CreatePlayer(world)
 
 	return game
 }

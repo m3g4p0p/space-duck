@@ -28,6 +28,6 @@ func init() {
 	}))
 }
 
-func GetClientSize() (int, int) {
+func ClientSize() (int, int) {
 	return clientWidth, clientHeight
 }
