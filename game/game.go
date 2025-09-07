@@ -16,6 +16,12 @@ import (
 
 const scale = 1
 
+const (
+	LayerBackground ecslib.LayerID = iota
+	LayerMain
+	LayerUI
+)
+
 type Game struct {
 	*ecslib.ECS
 	once sync.Once
@@ -45,8 +51,8 @@ func New() *Game {
 	ecs.AddSystem(system.NewTargetSystem().Update)
 	ecs.AddSystem(system.NewTiltSystem().Update)
 	ecs.AddSystem(system.NewPlayerSystem().Update)
-	ecs.AddRenderer(ecslib.LayerDefault, system.NewRenderSystem().Draw)
-	ecs.AddRenderer(ecslib.LayerDefault, FlushLogs)
+	ecs.AddRenderer(LayerMain, system.NewRenderSystem().Draw)
+	ecs.AddRenderer(LayerUI, FlushLogs)
 
 	factory.CreatePlayer(world)
 

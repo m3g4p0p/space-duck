@@ -24,5 +24,5 @@ var (
 	Target   = donburi.NewComponentType[TargetData]()
 	Velocity = donburi.NewComponentType[VelocityData]()
 	Tilt     = donburi.NewComponentType[TiltData]()
-	Player   = donburi.NewComponentType[struct{}]()
+	Player   = donburi.NewTag("player")
 )
