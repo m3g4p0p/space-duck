@@ -25,6 +25,10 @@ func (s RenderSystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
 		op.GeoM.Rotate(transform.WorldRotation(e) + angle)
 		op.GeoM.Scale(transform.WorldScale(e).XY())
 		op.GeoM.Translate(transform.WorldPosition(e).XY())
+
+		aplha := util.GetValue(e, component.Alpha, 1)
+		op.ColorScale.ScaleAlpha(aplha)
+
 		image.DrawImage(sprite, op)
 	})
 }

@@ -20,9 +20,11 @@ type TiltData struct {
 
 // var MessageComponent = donburi.NewComponentType[pubsub.Message]()
 var (
-	Sprite   = donburi.NewComponentType[ebiten.Image]()
-	Target   = donburi.NewComponentType[TargetData]()
-	Velocity = donburi.NewComponentType[VelocityData]()
-	Tilt     = donburi.NewComponentType[TiltData]()
-	Player   = donburi.NewTag("player")
+	Sprite     = donburi.NewComponentType[ebiten.Image]()
+	Target     = donburi.NewComponentType[TargetData]()
+	Velocity   = donburi.NewComponentType[VelocityData]()
+	Tilt       = donburi.NewComponentType[TiltData]()
+	Alpha      = donburi.NewComponentType[float32]()
+	Background = donburi.NewTag("background")
+	Player     = donburi.NewTag("player")
 )

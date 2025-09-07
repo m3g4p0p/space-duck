@@ -47,7 +47,7 @@ func New() *Game {
 	ecs := ecslib.NewECS(world)
 	game := &Game{ECS: ecs}
 
-	ebiten.SetWindowTitle("Hello, World!")
+	ebiten.SetWindowTitle("Space Duck")
 	ecs.AddSystem(system.NewTargetSystem().Update)
 	ecs.AddSystem(system.NewTiltSystem().Update)
 	ecs.AddSystem(system.NewPlayerSystem().Update)
