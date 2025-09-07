@@ -22,7 +22,7 @@ func NewTargetSystem() TargetSystem {
 			component.Target,
 			transform.Transform,
 		)),
-		harmonica.NewSpring(harmonica.FPS(ebiten.TPS()), 5.0, 0.2),
+		harmonica.NewSpring(harmonica.FPS(ebiten.TPS()), 5.0, 0.5),
 	}
 }
 
