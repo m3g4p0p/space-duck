@@ -51,6 +51,7 @@ func New() *Game {
 	ecs.AddSystem(system.NewTargetSystem().Update)
 	ecs.AddSystem(system.NewTiltSystem().Update)
 	ecs.AddSystem(system.NewPlayerSystem().Update)
+	ecs.AddSystem(system.NewParticleSystem().Update)
 	ecs.AddRenderer(LayerMain, system.NewRenderSystem().Draw)
 	ecs.AddRenderer(LayerUI, FlushLogs)
 

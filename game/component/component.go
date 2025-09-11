@@ -1,6 +1,7 @@
 package component
 
 import (
+	"github.com/charmbracelet/harmonica"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/features/math"
@@ -24,6 +25,7 @@ var (
 	Target     = donburi.NewComponentType[TargetData]()
 	Velocity   = donburi.NewComponentType[VelocityData]()
 	Tilt       = donburi.NewComponentType[TiltData]()
+	Projectile = donburi.NewComponentType[harmonica.Projectile]()
 	Alpha      = donburi.NewComponentType[float32]()
 	Background = donburi.NewTag("background")
 	Player     = donburi.NewTag("player")
