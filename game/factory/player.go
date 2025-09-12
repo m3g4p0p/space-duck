@@ -12,7 +12,7 @@ import (
 
 var playerSprite = util.Must(util.LoadImage(assets.FS, "PNG/shipPink_manned.png"))
 
-func CreatePlayer(world donburi.World) *donburi.Entry {
+func CreatePlayer(world donburi.World, pos math.Vec2) *donburi.Entry {
 	entry := world.Entry(world.Create(
 		component.Sprite,
 		component.Player,
@@ -28,7 +28,9 @@ func CreatePlayer(world donburi.World) *donburi.Entry {
 
 	component.Sprite.Set(entry, playerSprite)
 	component.Tilt.SetValue(entry, tilt)
+	component.Target.Set(entry, &component.TargetData{Vec2: pos})
 	transform.SetWorldScale(entry, math.NewVec2(0.5, 0.5))
+	transform.SetWorldPosition(entry, pos)
 
 	return entry
 }

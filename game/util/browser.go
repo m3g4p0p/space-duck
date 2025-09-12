@@ -9,6 +9,7 @@ import (
 var (
 	clientWidth, clientHeight = getDimensions()
 	window                    = js.Global().Get("window")
+	IsBrowser                 = true
 )
 
 func getDimensions() (int, int) {

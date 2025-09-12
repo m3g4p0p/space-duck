@@ -62,7 +62,9 @@ func New() *Game {
 	ecs.AddRenderer(LayerMain, system.NewRenderSystem(filter.Not(isBackground)).Draw)
 	ecs.AddRenderer(LayerUI, FlushLogs)
 
-	factory.CreatePlayer(world)
+	if !util.IsBrowser {
+		ebiten.SetWindowSize(400, 800)
+	}
 
 	width, height := util.ClientSize()
 	for range 20 {
@@ -73,6 +75,8 @@ func New() *Game {
 			util.RandIntMN(2, 5),
 		)
 	}
+
+	factory.CreatePlayer(world, util.Vec2FromInt(width/2, height/2))
 
 	return game
 }

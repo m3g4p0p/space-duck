@@ -2,7 +2,6 @@ package system
 
 import (
 	"log/slog"
-	"math"
 	"math/rand/v2"
 
 	"m3g4p0p/spring/game/component"
@@ -51,7 +50,7 @@ func (t ParticleSystem) Update(ecs *ecs.ECS) {
 		}
 
 		transform.SetWorldPosition(entry, mathlib.NewVec2(pos.X, pos.Y))
-		alpha := 0.5 + math.Sin(pos.Y/10)/2
+		alpha := 1 - pos.Y/float64(height)
 		component.Alpha.SetValue(entry, float32(alpha))
 	}
 }
