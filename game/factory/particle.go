@@ -15,6 +15,7 @@ func CreateParticle(world donburi.World, x, y, size int) *donburi.Entry {
 		component.Sprite,
 		component.Alpha,
 		component.Projectile,
+		component.Background,
 		transform.Transform,
 	))
 

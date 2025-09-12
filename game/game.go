@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"sync"
 
+	"m3g4p0p/spring/game/component"
 	"m3g4p0p/spring/game/factory"
 	"m3g4p0p/spring/game/system"
 	"m3g4p0p/spring/game/util"
@@ -12,6 +13,7 @@ import (
 	"github.com/yohamta/donburi"
 	ecslib "github.com/yohamta/donburi/ecs"
 	eventslib "github.com/yohamta/donburi/features/events"
+	"github.com/yohamta/donburi/filter"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -23,6 +25,8 @@ const (
 	LayerMain
 	LayerUI
 )
+
+var isBackground = filter.Contains(component.Background)
 
 type Game struct {
 	*ecslib.ECS
@@ -54,7 +58,8 @@ func New() *Game {
 	ecs.AddSystem(system.NewTiltSystem().Update)
 	ecs.AddSystem(system.NewPlayerSystem().Update)
 	ecs.AddSystem(system.NewParticleSystem().Update)
-	ecs.AddRenderer(LayerMain, system.NewRenderSystem().Draw)
+	ecs.AddRenderer(LayerMain, system.NewRenderSystem(isBackground).Draw)
+	ecs.AddRenderer(LayerMain, system.NewRenderSystem(filter.Not(isBackground)).Draw)
 	ecs.AddRenderer(LayerUI, FlushLogs)
 
 	factory.CreatePlayer(world)

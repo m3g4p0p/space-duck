@@ -33,10 +33,13 @@ func (s RenderSystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
 	})
 }
 
-func NewRenderSystem(components ...donburi.IComponentType) RenderSystem {
-	components = append(components, component.Sprite, transform.Transform)
+func NewRenderSystem(filters ...filter.LayoutFilter) RenderSystem {
+	filters = append(filters, filter.Contains(
+		component.Sprite,
+		transform.Transform,
+	))
 
 	return RenderSystem{
-		query: donburi.NewQuery(filter.Contains(components...)),
+		query: donburi.NewQuery(filter.And(filters...)),
 	}
 }
