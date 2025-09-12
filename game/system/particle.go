@@ -1,13 +1,17 @@
 package system
 
 import (
+	"math"
+
 	"m3g4p0p/spring/game/component"
 	"m3g4p0p/spring/game/factory"
+	"m3g4p0p/spring/game/util"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
-	"github.com/yohamta/donburi/features/math"
+	mathlib "github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 )
@@ -25,12 +29,22 @@ func NewParticleSystem() ParticleSystem {
 }
 
 func (t ParticleSystem) Update(ecs *ecs.ECS) {
-	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+	_, height := util.ClientSize()
+
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		factory.CreateParticle(ecs.World, 10)
 	}
 
 	for entry := range t.query.Iter(ecs.World) {
 		pos := component.Projectile.Get(entry).Update()
-		transform.SetWorldPosition(entry, math.NewVec2(pos.X, pos.Y))
+
+		if height < int(pos.Y) {
+			ecs.World.Remove(entry.Entity())
+			return
+		}
+
+		transform.SetWorldPosition(entry, mathlib.NewVec2(pos.X, pos.Y))
+		alpha := 0.5 + math.Sin(pos.Y/10)/2
+		component.Alpha.SetValue(entry, float32(alpha))
 	}
 }
