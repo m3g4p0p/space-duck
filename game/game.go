@@ -1,7 +1,6 @@
 package game
 
 import (
-	"log/slog"
 	"math/rand"
 	"sync"
 
@@ -36,7 +35,6 @@ type Game struct {
 func (g *Game) Update() error {
 	g.ECS.Update()
 	eventslib.ProcessAllEvents(g.World)
-	slog.Info("hello world")
 	return nil
 }
 
@@ -58,6 +56,7 @@ func New() *Game {
 	ecs.AddSystem(system.NewTiltSystem().Update)
 	ecs.AddSystem(system.NewPlayerSystem().Update)
 	ecs.AddSystem(system.NewParticleSystem().Update)
+	ecs.AddSystem(system.NewProjectileSystem().Update)
 	ecs.AddRenderer(LayerMain, system.NewRenderSystem(isBackground).Draw)
 	ecs.AddRenderer(LayerMain, system.NewRenderSystem(filter.Not(isBackground)).Draw)
 	ecs.AddRenderer(LayerUI, FlushLogs)

@@ -11,7 +11,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
-	mathlib "github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 )
@@ -42,14 +41,13 @@ func (t ParticleSystem) Update(ecs *ecs.ECS) {
 	}
 
 	for entry := range t.query.Iter(ecs.World) {
-		pos := component.Projectile.Get(entry).Update()
+		pos := transform.WorldPosition(entry)
 
 		if height < int(pos.Y) {
 			ecs.World.Remove(entry.Entity())
 			return
 		}
 
-		transform.SetWorldPosition(entry, mathlib.NewVec2(pos.X, pos.Y))
 		alpha := 1 - pos.Y/float64(height)
 		component.Alpha.SetValue(entry, float32(alpha))
 	}

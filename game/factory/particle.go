@@ -20,11 +20,11 @@ func CreateParticle(world donburi.World, x, y, size int) *donburi.Entry {
 	))
 
 	component.Sprite.Set(entry, util.CreateCircle(size))
-	component.Alpha.SetValue(entry, 1)
+	transform.SetWorldPosition(entry, util.Vec2FromInt(x, y))
 
 	component.Projectile.Set(entry, harmonica.NewProjectile(
 		harmonica.FPS(ebiten.TPS()),
-		harmonica.Point{X: float64(x), Y: float64(y)},
+		harmonica.Point{},
 		harmonica.Vector{Y: 100},
 		harmonica.Vector{Y: 100},
 	))
