@@ -4,18 +4,24 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"io"
 	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 const (
 	SRC_DIR  = "public"
 	DEST_DIR = "dist"
 )
+
+type TemplateData struct {
+	Hash string
+}
 
 func copyFile(srcPath, destPath string) error {
 	var srcFile *os.File
@@ -36,6 +42,23 @@ func copyFile(srcPath, destPath string) error {
 	return err
 }
 
+func executeTemplate(srcPath, destPath string) error {
+	tpl, err := template.ParseFiles(srcPath)
+	if err != nil {
+		return err
+	}
+
+	destFile, err := os.Create(destPath)
+	if err != nil {
+		return err
+	}
+	defer destFile.Close()
+
+	return tpl.Execute(destFile, TemplateData{
+		Hash: fmt.Sprint(time.Now().Unix()),
+	})
+}
+
 func copyPublicTree() error {
 	return filepath.WalkDir(SRC_DIR, func(path string, d fs.DirEntry, err error) error {
 		var destPath string
@@ -52,6 +75,10 @@ func copyPublicTree() error {
 
 		if d.IsDir() {
 			return os.MkdirAll(destPath, os.ModePerm)
+		}
+
+		if strings.HasSuffix(path, ".html") {
+			return executeTemplate(path, destPath)
 		}
 
 		return copyFile(path, destPath)
