@@ -2,7 +2,10 @@ package game
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
 	"log/slog"
+	"strings"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -11,7 +14,7 @@ import (
 
 var (
 	buf    bytes.Buffer
-	logger = slog.New(slog.NewTextHandler(&buf, nil))
+	logger = slog.New(slog.NewJSONHandler(&buf, nil))
 )
 
 func init() {
@@ -19,6 +22,24 @@ func init() {
 }
 
 func FlushLogs(_ *ecs.ECS, image *ebiten.Image) {
-	ebitenutil.DebugPrint(image, buf.String())
+	var s strings.Builder
+
+	for line := range bytes.SplitSeq(buf.Bytes(), []byte{'\n'}) {
+		var data any
+
+		err := json.Unmarshal(line, &data)
+		if err != nil {
+			continue
+		}
+
+		val, err := json.MarshalIndent(data, "", "  ")
+		if err != nil {
+			continue
+		}
+
+		fmt.Fprintln(&s, string(val))
+	}
+
+	ebitenutil.DebugPrint(image, s.String())
 	buf.Reset()
 }
