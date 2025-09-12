@@ -28,8 +28,6 @@ func (t PlayerSystem) Update(ecs *ecs.ECS) {
 	}
 
 	for entry := range t.query.Iter(ecs.World) {
-		component.Target.Set(entry, &component.TargetData{
-			Vec2: pos,
-		})
+		component.Target.SetValue(entry, pos)
 	}
 }

@@ -28,7 +28,7 @@ func CreatePlayer(world donburi.World, pos math.Vec2) *donburi.Entry {
 
 	component.Sprite.Set(entry, playerSprite)
 	component.Tilt.SetValue(entry, tilt)
-	component.Target.Set(entry, &component.TargetData{Vec2: pos})
+	component.Target.SetValue(entry, pos)
 	transform.SetWorldScale(entry, math.NewVec2(0.5, 0.5))
 	transform.SetWorldPosition(entry, pos)
 

@@ -7,23 +7,14 @@ import (
 	"github.com/yohamta/donburi/features/math"
 )
 
-type TargetData struct {
-	math.Vec2
-}
-
-type VelocityData struct {
-	math.Vec2
-}
-
 type TiltData struct {
 	AbsMax float64
 }
 
-// var MessageComponent = donburi.NewComponentType[pubsub.Message]()
 var (
 	Sprite     = donburi.NewComponentType[ebiten.Image]()
-	Target     = donburi.NewComponentType[TargetData]()
-	Velocity   = donburi.NewComponentType[VelocityData]()
+	Target     = donburi.NewComponentType[math.Vec2]()
+	Velocity   = donburi.NewComponentType[math.Vec2]()
 	Tilt       = donburi.NewComponentType[TiltData]()
 	Projectile = donburi.NewComponentType[harmonica.Projectile]()
 	Alpha      = donburi.NewComponentType[float32]()
