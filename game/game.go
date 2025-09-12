@@ -2,10 +2,12 @@ package game
 
 import (
 	"log/slog"
+	"math/rand"
 	"sync"
 
 	"m3g4p0p/spring/game/factory"
 	"m3g4p0p/spring/game/system"
+	"m3g4p0p/spring/game/util"
 
 	"github.com/yohamta/donburi"
 	ecslib "github.com/yohamta/donburi/ecs"
@@ -56,6 +58,16 @@ func New() *Game {
 	ecs.AddRenderer(LayerUI, FlushLogs)
 
 	factory.CreatePlayer(world)
+
+	width, height := util.ClientSize()
+	for range 20 {
+		factory.CreateParticle(
+			world,
+			rand.Intn(width),
+			rand.Intn(height),
+			util.RandIntMN(2, 5),
+		)
+	}
 
 	return game
 }

@@ -1,8 +1,6 @@
 package factory
 
 import (
-	"math/rand"
-
 	"m3g4p0p/spring/game/component"
 	"m3g4p0p/spring/game/util"
 
@@ -12,7 +10,7 @@ import (
 	"github.com/yohamta/donburi/features/transform"
 )
 
-func CreateParticle(world donburi.World, size int) *donburi.Entry {
+func CreateParticle(world donburi.World, x, y, size int) *donburi.Entry {
 	entry := world.Entry(world.Create(
 		component.Sprite,
 		component.Alpha,
@@ -23,11 +21,9 @@ func CreateParticle(world donburi.World, size int) *donburi.Entry {
 	component.Sprite.Set(entry, util.CreateCircle(size))
 	component.Alpha.SetValue(entry, 1)
 
-	width, _ := util.ClientSize()
-
 	component.Projectile.Set(entry, harmonica.NewProjectile(
 		harmonica.FPS(ebiten.TPS()),
-		harmonica.Point{X: float64(width) * rand.Float64()},
+		harmonica.Point{X: float64(x), Y: float64(y)},
 		harmonica.Vector{Y: 100},
 		harmonica.Vector{Y: 100},
 	))
