@@ -8,7 +8,12 @@ import (
 	"github.com/yohamta/donburi/features/transform"
 )
 
-func CreateText(world donburi.World, text string, pos math.Vec2) *donburi.Entry {
+func CreateText(
+	world donburi.World,
+	text string,
+	size float64,
+	pos math.Vec2,
+) *donburi.Entry {
 	entry := world.Entry(world.Create(
 		component.Text,
 		transform.Transform,
@@ -16,7 +21,8 @@ func CreateText(world donburi.World, text string, pos math.Vec2) *donburi.Entry 
 
 	component.Text.Set(entry, &component.TextData{
 		Text: text,
-		Size: 24,
+		Size: size,
+		Pos:  pos,
 	})
 
 	return entry

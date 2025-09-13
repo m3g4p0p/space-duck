@@ -4,7 +4,6 @@ import (
 	"bytes"
 
 	"m3g4p0p/spring/game/component"
-	"m3g4p0p/spring/game/util"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
@@ -34,8 +33,7 @@ func (s *UISystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
 	s.Each(ecs.World, func(e *donburi.Entry) {
 		data := component.Text.Get(e)
 		drawOpts := ebiten.DrawImageOptions{}
-		center := util.CLientSizeVec2().DivScalar(2)
-		drawOpts.GeoM.Translate(center.XY())
+		drawOpts.GeoM.Translate(data.Pos.XY())
 
 		text.Draw(
 			image,
