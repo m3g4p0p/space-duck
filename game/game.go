@@ -50,17 +50,21 @@ func New() *Game {
 	world := donburi.NewWorld()
 	ecs := ecslib.NewECS(world)
 	game := &Game{ECS: ecs}
+	ui := system.NewUISystem()
 
 	ebiten.SetWindowTitle("Space Duck")
+
 	ecs.AddSystem(system.NewTargetSystem().Update)
 	ecs.AddSystem(system.NewTiltSystem().Update)
 	ecs.AddSystem(system.NewPlayerSystem().Update)
 	ecs.AddSystem(system.NewParticleSystem().Update)
 	ecs.AddSystem(system.NewProjectileSystem().Update)
+	ecs.AddSystem(ui.Update)
+
 	ecs.AddRenderer(LayerMain, system.NewRenderSystem(isBackground).Draw)
 	ecs.AddRenderer(LayerMain, system.NewRenderSystem(filter.Not(isBackground)).Draw)
 	ecs.AddRenderer(LayerUI, FlushLogs)
-	ecs.AddRenderer(LayerUI, system.NewUISystem().Draw)
+	ecs.AddRenderer(LayerUI, ui.Draw)
 
 	if !util.IsBrowser {
 		ebiten.SetWindowSize(400, 800)

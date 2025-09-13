@@ -5,6 +5,7 @@ import (
 
 	"m3g4p0p/spring/game/component"
 
+	"github.com/charmbracelet/harmonica"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
@@ -17,7 +18,8 @@ import (
 var fontSource *text.GoTextFaceSource
 
 type UISystem struct {
-	*donburi.Query
+	query  *donburi.Query
+	spring harmonica.Spring
 }
 
 func init() {
@@ -29,9 +31,25 @@ func init() {
 	}
 }
 
+func NewUISystem() *UISystem {
+	return &UISystem{
+		query: donburi.NewQuery(filter.Contains(
+			component.Text,
+			transform.Transform,
+		)),
+		spring: harmonica.NewSpring(
+			harmonica.FPS(ebiten.TPS()),
+			5.0,
+			0.5,
+		),
+	}
+}
+
+func (s *UISystem) Update(ecs *ecs.ECS) {}
+
 func (s *UISystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
-	s.Each(ecs.World, func(e *donburi.Entry) {
-		data := component.Text.Get(e)
+	s.query.Each(ecs.World, func(e *donburi.Entry) {
+		data := component.Text.GetValue(e)
 		drawOpts := ebiten.DrawImageOptions{}
 		drawOpts.GeoM.Translate(data.Pos.XY())
 
@@ -51,11 +69,4 @@ func (s *UISystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
 			},
 		)
 	})
-}
-
-func NewUISystem() *UISystem {
-	return &UISystem{donburi.NewQuery(filter.Contains(
-		component.Text,
-		transform.Transform,
-	))}
 }

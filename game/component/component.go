@@ -17,12 +17,17 @@ type TextData struct {
 	Pos  math.Vec2
 }
 
+type SpringData struct {
+	Pos, Vel float64
+}
+
 var (
 	Sprite     = donburi.NewComponentType[ebiten.Image]()
 	Target     = donburi.NewComponentType[math.Vec2]()
 	Velocity   = donburi.NewComponentType[math.Vec2]()
 	Tilt       = donburi.NewComponentType[TiltData]()
 	Text       = donburi.NewComponentType[TextData]()
+	Spring     = donburi.NewComponentType[SpringData]()
 	Projectile = donburi.NewComponentType[harmonica.Projectile]()
 	Alpha      = donburi.NewComponentType[float32]()
 	Background = donburi.NewTag("background")
