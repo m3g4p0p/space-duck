@@ -2,6 +2,7 @@ package system
 
 import (
 	"bytes"
+	"math"
 
 	"m3g4p0p/spring/game/component"
 
@@ -11,7 +12,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
-	"github.com/yohamta/donburi/features/math"
+	mathlib "github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 )
@@ -56,7 +57,12 @@ func (s *UISystem) Update(ecs *ecs.ECS) {
 	s.queryUpdate.Each(ecs.World, func(e *donburi.Entry) {
 		data := component.Spring.Get(e)
 		data.Pos, data.Vel = s.spring.Update(data.Pos, data.Vel, data.Eq)
-		transform.SetWorldScale(e, math.NewVec2(data.Pos, data.Pos))
+		transform.SetWorldScale(e, mathlib.NewVec2(data.Pos, data.Pos))
+
+		if math.Abs(data.Eq-data.Pos) < mathlib.Epsilon &&
+			math.Abs(data.Vel) < mathlib.Epsilon {
+			e.RemoveComponent(component.Spring)
+		}
 	})
 }
 
