@@ -2,7 +2,6 @@ package system
 
 import (
 	"bytes"
-	"log"
 
 	"m3g4p0p/spring/game/util"
 
@@ -12,21 +11,28 @@ import (
 	"github.com/yohamta/donburi/ecs"
 )
 
+var fontSource *text.GoTextFaceSource
+
 type UISystem struct{}
 
-func (s *UISystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
-	f, err := text.NewGoTextFaceSource(bytes.NewReader(fonts.PressStart2P_ttf))
-	if err != nil {
-		log.Fatal(err)
-	}
+func init() {
+	var err error
 
+	fontSource, err = text.NewGoTextFaceSource(bytes.NewReader(fonts.PressStart2P_ttf))
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (s *UISystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
 	drawOpts := ebiten.DrawImageOptions{}
-	drawOpts.GeoM.Translate(util.CLientSizeVec2().DivScalar(2).XY())
+	center := util.CLientSizeVec2().DivScalar(2)
+	drawOpts.GeoM.Translate(center.XY())
 
 	text.Draw(
 		image,
 		"hello",
-		&text.GoTextFace{Source: f, Size: 30},
+		&text.GoTextFace{Source: fontSource, Size: 30},
 		&text.DrawOptions{
 			DrawImageOptions: drawOpts,
 			LayoutOptions: text.LayoutOptions{
