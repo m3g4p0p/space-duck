@@ -3,17 +3,23 @@ package system
 import (
 	"bytes"
 
+	"m3g4p0p/spring/game/component"
 	"m3g4p0p/spring/game/util"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
+	"github.com/yohamta/donburi/features/transform"
+	"github.com/yohamta/donburi/filter"
 )
 
 var fontSource *text.GoTextFaceSource
 
-type UISystem struct{}
+type UISystem struct {
+	*donburi.Query
+}
 
 func init() {
 	var err error
@@ -25,24 +31,33 @@ func init() {
 }
 
 func (s *UISystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
-	drawOpts := ebiten.DrawImageOptions{}
-	center := util.CLientSizeVec2().DivScalar(2)
-	drawOpts.GeoM.Translate(center.XY())
+	s.Each(ecs.World, func(e *donburi.Entry) {
+		data := component.Text.Get(e)
+		drawOpts := ebiten.DrawImageOptions{}
+		center := util.CLientSizeVec2().DivScalar(2)
+		drawOpts.GeoM.Translate(center.XY())
 
-	text.Draw(
-		image,
-		"hello",
-		&text.GoTextFace{Source: fontSource, Size: 30},
-		&text.DrawOptions{
-			DrawImageOptions: drawOpts,
-			LayoutOptions: text.LayoutOptions{
-				PrimaryAlign:   text.AlignCenter,
-				SecondaryAlign: text.AlignCenter,
+		text.Draw(
+			image,
+			data.Text,
+			&text.GoTextFace{
+				Source: fontSource,
+				Size:   data.Size,
 			},
-		},
-	)
+			&text.DrawOptions{
+				DrawImageOptions: drawOpts,
+				LayoutOptions: text.LayoutOptions{
+					PrimaryAlign:   text.AlignCenter,
+					SecondaryAlign: text.AlignCenter,
+				},
+			},
+		)
+	})
 }
 
 func NewUISystem() *UISystem {
-	return &UISystem{}
+	return &UISystem{donburi.NewQuery(filter.Contains(
+		component.Text,
+		transform.Transform,
+	))}
 }

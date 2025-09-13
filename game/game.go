@@ -77,6 +77,7 @@ func New() *Game {
 	}
 
 	factory.CreatePlayer(world, util.Vec2FromInt(width/2, height/2))
+	factory.CreateText(world, "hello", util.CLientSizeVec2().DivScalar(2))
 
 	return game
 }

@@ -11,11 +11,18 @@ type TiltData struct {
 	AbsMax float64
 }
 
+type TextData struct {
+	Text string
+	Size float64
+	Pos  math.Vec2
+}
+
 var (
 	Sprite     = donburi.NewComponentType[ebiten.Image]()
 	Target     = donburi.NewComponentType[math.Vec2]()
 	Velocity   = donburi.NewComponentType[math.Vec2]()
 	Tilt       = donburi.NewComponentType[TiltData]()
+	Text       = donburi.NewComponentType[TextData]()
 	Projectile = donburi.NewComponentType[harmonica.Projectile]()
 	Alpha      = donburi.NewComponentType[float32]()
 	Background = donburi.NewTag("background")
