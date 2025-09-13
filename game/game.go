@@ -60,6 +60,7 @@ func New() *Game {
 	ecs.AddRenderer(LayerMain, system.NewRenderSystem(isBackground).Draw)
 	ecs.AddRenderer(LayerMain, system.NewRenderSystem(filter.Not(isBackground)).Draw)
 	ecs.AddRenderer(LayerUI, FlushLogs)
+	ecs.AddRenderer(LayerUI, system.NewUISystem().Draw)
 
 	if !util.IsBrowser {
 		ebiten.SetWindowSize(400, 800)
