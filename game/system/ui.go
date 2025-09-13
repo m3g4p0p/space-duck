@@ -18,8 +18,9 @@ import (
 var fontSource *text.GoTextFaceSource
 
 type UISystem struct {
-	query  *donburi.Query
-	spring harmonica.Spring
+	queryDraw   *donburi.Query
+	queryUpdate *donburi.Query
+	spring      harmonica.Spring
 }
 
 func init() {
@@ -33,22 +34,32 @@ func init() {
 
 func NewUISystem() *UISystem {
 	return &UISystem{
-		query: donburi.NewQuery(filter.Contains(
+		queryDraw: donburi.NewQuery(filter.Contains(
 			component.Text,
 			transform.Transform,
 		)),
+		queryUpdate: donburi.NewQuery(filter.Contains(
+			component.Text,
+			component.Spring,
+		)),
 		spring: harmonica.NewSpring(
 			harmonica.FPS(ebiten.TPS()),
-			5.0,
+			10.0,
 			0.5,
 		),
 	}
 }
 
-func (s *UISystem) Update(ecs *ecs.ECS) {}
+func (s *UISystem) Update(ecs *ecs.ECS) {
+	s.queryUpdate.Each(ecs.World, func(e *donburi.Entry) {
+		data := component.Spring.Get(e)
+		data.Pos, data.Vel = s.spring.Update(data.Pos, data.Vel, data.Eq)
+		component.Text.Get(e).Size = data.Pos
+	})
+}
 
 func (s *UISystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
-	s.query.Each(ecs.World, func(e *donburi.Entry) {
+	s.queryDraw.Each(ecs.World, func(e *donburi.Entry) {
 		data := component.Text.GetValue(e)
 		drawOpts := ebiten.DrawImageOptions{}
 		drawOpts.GeoM.Translate(data.Pos.XY())

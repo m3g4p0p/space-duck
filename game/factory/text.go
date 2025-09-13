@@ -16,6 +16,7 @@ func CreateText(
 ) *donburi.Entry {
 	entry := world.Entry(world.Create(
 		component.Text,
+		component.Spring,
 		transform.Transform,
 	))
 
@@ -23,6 +24,10 @@ func CreateText(
 		Text: text,
 		Size: size,
 		Pos:  pos,
+	})
+
+	component.Spring.Set(entry, &component.SpringData{
+		Eq: size,
 	})
 
 	return entry

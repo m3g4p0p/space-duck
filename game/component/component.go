@@ -18,7 +18,7 @@ type TextData struct {
 }
 
 type SpringData struct {
-	Pos, Vel float64
+	Pos, Vel, Eq float64
 }
 
 var (
