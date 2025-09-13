@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"log"
 
+	"m3g4p0p/spring/game/util"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
@@ -18,7 +20,21 @@ func (s *UISystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
 		log.Fatal(err)
 	}
 
-	text.Draw(image, "hello", &text.GoTextFace{Source: f, Size: 30}, &text.DrawOptions{})
+	drawOpts := ebiten.DrawImageOptions{}
+	drawOpts.GeoM.Translate(util.CLientSizeVec2().DivScalar(2).XY())
+
+	text.Draw(
+		image,
+		"hello",
+		&text.GoTextFace{Source: f, Size: 30},
+		&text.DrawOptions{
+			DrawImageOptions: drawOpts,
+			LayoutOptions: text.LayoutOptions{
+				PrimaryAlign:   text.AlignCenter,
+				SecondaryAlign: text.AlignCenter,
+			},
+		},
+	)
 }
 
 func NewUISystem() *UISystem {
