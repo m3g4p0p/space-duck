@@ -16,6 +16,7 @@ func CreateText(
 ) *donburi.Entry {
 	entry := world.Entry(world.Create(
 		component.Text,
+		component.Alpha,
 		component.Spring,
 		transform.Transform,
 	))

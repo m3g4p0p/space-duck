@@ -59,9 +59,12 @@ func (s *UISystem) Update(ecs *ecs.ECS) {
 		data.Pos, data.Vel = s.spring.Update(data.Pos, data.Vel, data.Eq)
 		transform.SetWorldScale(e, mathlib.NewVec2(data.Pos, data.Pos))
 
-		if math.Abs(data.Eq-data.Pos) < mathlib.Epsilon &&
-			math.Abs(data.Vel) < mathlib.Epsilon {
-			e.RemoveComponent(component.Spring)
+		if e.HasComponent(component.Alpha) {
+			component.Alpha.SetValue(e, 1-float32(data.Pos/data.Eq))
+		}
+
+		if math.Abs(data.Eq-data.Pos)+math.Abs(data.Vel) < 0.01 {
+			ecs.World.Remove(e.Entity())
 		}
 	})
 }
@@ -72,6 +75,12 @@ func (s *UISystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
 		drawOpts := ebiten.DrawImageOptions{}
 		drawOpts.GeoM.Scale(transform.WorldScale(e).XY())
 		drawOpts.GeoM.Translate(data.Pos.XY())
+		drawOpts.ColorScale.Scale(0, 1, 1, 1)
+
+		if e.HasComponent(component.Alpha) {
+			alpha := component.Alpha.GetValue(e)
+			drawOpts.ColorScale.ScaleAlpha(alpha)
+		}
 
 		text.Draw(
 			image,
