@@ -81,7 +81,7 @@ func New() *Game {
 	}
 
 	factory.CreatePlayer(world, util.Vec2FromInt(width/2, height/2))
-	factory.CreateText(world, "hello", 30, util.CLientSizeVec2().DivScalar(2))
+	factory.CreateText(world, "hello", 30, util.Vec2FromInt(width/2, height-100))
 
 	return game
 }

@@ -20,6 +20,7 @@ func NewTargetSystem() TargetSystem {
 	return TargetSystem{
 		donburi.NewQuery(filter.Contains(
 			component.Target,
+			component.Velocity,
 			transform.Transform,
 		)),
 		harmonica.NewSpring(harmonica.FPS(ebiten.TPS()), 5.0, 0.5),
