@@ -1,10 +1,12 @@
 package game
 
 import (
+	"fmt"
 	"math/rand"
 	"sync"
 
 	"m3g4p0p/spring/game/component"
+	"m3g4p0p/spring/game/events"
 	"m3g4p0p/spring/game/factory"
 	"m3g4p0p/spring/game/system"
 	"m3g4p0p/spring/game/util"
@@ -81,7 +83,13 @@ func New() *Game {
 	}
 
 	factory.CreatePlayer(world, util.Vec2FromInt(width/2, height/2))
-	factory.CreateText(world, "hello", 30, util.Vec2FromInt(width/2, height-100))
+
+	events.ScoreEvent.Subscribe(world, func(w donburi.World, event int) {
+		size := util.ClientSizeVec2()
+		size.X /= 2
+		size.Y -= 60
+		factory.CreateText(w, fmt.Sprint(event), 30, size)
+	})
 
 	return game
 }

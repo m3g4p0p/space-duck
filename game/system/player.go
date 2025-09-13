@@ -2,6 +2,7 @@ package system
 
 import (
 	"m3g4p0p/spring/game/component"
+	"m3g4p0p/spring/game/events"
 	"m3g4p0p/spring/game/util"
 
 	"github.com/yohamta/donburi"
@@ -29,7 +30,10 @@ func (t *PlayerSystem) Update(ecs *ecs.ECS) {
 	for entry := range t.query.Iter(ecs.World) {
 		if ok && !t.isTouched {
 			component.Target.SetValue(entry, pos)
-			component.Player.Get(entry).Score++
+
+			data := component.Player.Get(entry)
+			data.Score++
+			events.ScoreEvent.Publish(ecs.World, data.Score)
 		}
 
 		t.isTouched = ok
