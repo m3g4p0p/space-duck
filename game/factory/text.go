@@ -27,7 +27,7 @@ func CreateText(
 	})
 
 	component.Spring.Set(entry, &component.SpringData{
-		Eq: size,
+		Eq: 1,
 	})
 
 	return entry

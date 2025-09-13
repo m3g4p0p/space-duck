@@ -11,6 +11,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
+	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 )
@@ -41,6 +42,7 @@ func NewUISystem() *UISystem {
 		queryUpdate: donburi.NewQuery(filter.Contains(
 			component.Text,
 			component.Spring,
+			transform.Transform,
 		)),
 		spring: harmonica.NewSpring(
 			harmonica.FPS(ebiten.TPS()),
@@ -54,7 +56,7 @@ func (s *UISystem) Update(ecs *ecs.ECS) {
 	s.queryUpdate.Each(ecs.World, func(e *donburi.Entry) {
 		data := component.Spring.Get(e)
 		data.Pos, data.Vel = s.spring.Update(data.Pos, data.Vel, data.Eq)
-		component.Text.Get(e).Size = data.Pos
+		transform.SetWorldScale(e, math.NewVec2(data.Pos, data.Pos))
 	})
 }
 
@@ -62,6 +64,7 @@ func (s *UISystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
 	s.queryDraw.Each(ecs.World, func(e *donburi.Entry) {
 		data := component.Text.GetValue(e)
 		drawOpts := ebiten.DrawImageOptions{}
+		drawOpts.GeoM.Scale(transform.WorldScale(e).XY())
 		drawOpts.GeoM.Translate(data.Pos.XY())
 
 		text.Draw(
