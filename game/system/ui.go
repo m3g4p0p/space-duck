@@ -47,8 +47,8 @@ func NewUISystem() *UISystem {
 		)),
 		spring: harmonica.NewSpring(
 			harmonica.FPS(ebiten.TPS()),
-			10.0,
-			0.5,
+			7.5,
+			1.5,
 		),
 	}
 }
