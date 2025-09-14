@@ -5,7 +5,7 @@ import (
 	"github.com/yohamta/donburi/features/math"
 )
 
-func ActivePosition() (math.Vec2, bool) {
+func TouchPosition() (math.Vec2, bool) {
 	var x, y int
 	var ok bool
 
