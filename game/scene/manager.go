@@ -37,3 +37,12 @@ func (m *Manager) Draw(screen *ebiten.Image) {
 		m.current.Draw(screen)
 	}
 }
+
+func (m *Manager) Switch(name string) {
+	if m.current != nil {
+		m.current.Pause()
+	}
+
+	m.current = m.scenes[name]
+	m.current.Resume()
+}
