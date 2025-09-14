@@ -13,12 +13,13 @@ type Manager struct {
 	scenes  Scenes
 }
 
-func NewManager(initial string, scenes Scenes) *Manager {
-	if scenes == nil {
-		scenes = make(Scenes)
+func NewManager(options ...ManagerOption) *Manager {
+	m := &Manager{}
+
+	for _, opt := range options {
+		opt(m)
 	}
 
-	m := &Manager{scenes: scenes}
 	return m
 }
 
