@@ -11,10 +11,11 @@ type Scenes map[string]*ecs.ECS
 type Manager struct {
 	current *ecs.ECS
 	scenes  Scenes
+	scale   int
 }
 
 func NewManager(options ...ManagerOption) *Manager {
-	m := &Manager{}
+	m := &Manager{scale: 1}
 
 	for _, opt := range options {
 		opt(m)
@@ -36,6 +37,10 @@ func (m *Manager) Draw(screen *ebiten.Image) {
 	if m.current != nil {
 		m.current.Draw(screen)
 	}
+}
+
+func (m *Manager) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
+	return outsideWidth * m.scale, outsideHeight * m.scale
 }
 
 func (m *Manager) Switch(name string) {
