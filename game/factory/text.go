@@ -1,6 +1,8 @@
 package factory
 
 import (
+	"image/color"
+
 	"m3g4p0p/spring/game/component"
 
 	"github.com/yohamta/donburi"
@@ -17,6 +19,7 @@ func CreateFCT(
 	entry := world.Entry(world.Create(
 		component.Text,
 		component.Alpha,
+		component.Color,
 		component.Spring,
 		transform.Transform,
 	))
@@ -29,6 +32,10 @@ func CreateFCT(
 
 	component.Spring.Set(entry, &component.SpringData{
 		Eq: 2,
+	})
+
+	component.Color.Set(entry, &component.ColorData{
+		Color: color.RGBA{G: 255, B: 255},
 	})
 
 	return entry

@@ -1,6 +1,8 @@
 package component
 
 import (
+	"image/color"
+
 	"github.com/charmbracelet/harmonica"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
@@ -9,6 +11,10 @@ import (
 
 type TiltData struct {
 	AbsMax float64
+}
+
+type ColorData struct {
+	color.Color
 }
 
 type TextData struct {
@@ -34,6 +40,7 @@ var (
 	Spring     = donburi.NewComponentType[SpringData]()
 	Projectile = donburi.NewComponentType[harmonica.Projectile]()
 	Player     = donburi.NewComponentType[PlayerData]()
+	Color      = donburi.NewComponentType[ColorData]()
 	Alpha      = donburi.NewComponentType[float32]()
 	Background = donburi.NewTag("background")
 )

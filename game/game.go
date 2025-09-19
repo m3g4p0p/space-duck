@@ -42,6 +42,7 @@ func New() ebiten.Game {
 		ui := system.NewUISystem()
 		var isTouched bool
 
+		ebiten.SetFullscreen(false)
 		ecs.AddSystem(ui.Update)
 		ecs.AddRenderer(LayerUI, ui.Draw)
 

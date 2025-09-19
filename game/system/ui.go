@@ -75,7 +75,11 @@ func (s *UISystem) Draw(ecs *ecs.ECS, image *ebiten.Image) {
 		drawOpts := ebiten.DrawImageOptions{}
 		drawOpts.GeoM.Scale(transform.WorldScale(e).XY())
 		drawOpts.GeoM.Translate(data.Pos.XY())
-		drawOpts.ColorScale.Scale(0, 1, 1, 1)
+
+		if e.HasComponent(component.Color) {
+			color := component.Color.GetValue(e)
+			drawOpts.ColorScale.ScaleWithColor(color)
+		}
 
 		if e.HasComponent(component.Alpha) {
 			alpha := component.Alpha.GetValue(e)
