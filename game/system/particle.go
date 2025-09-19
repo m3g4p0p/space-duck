@@ -22,7 +22,9 @@ type ParticleSystem struct {
 func NewParticleSystem() ParticleSystem {
 	return ParticleSystem{donburi.NewQuery(filter.Contains(
 		component.Sprite,
+		component.Alpha,
 		component.Projectile,
+		component.Background,
 		transform.Transform,
 	))}
 }

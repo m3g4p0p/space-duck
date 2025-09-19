@@ -4,7 +4,10 @@ package util
 
 import "github.com/hajimehoshi/ebiten/v2"
 
-var IsBrowser = false
+var (
+	IsBrowser = false
+	IsMobile  = false
+)
 
 func ClientSize() (int, int) {
 	return ebiten.WindowSize()

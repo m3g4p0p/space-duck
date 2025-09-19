@@ -10,6 +10,7 @@ var (
 	clientWidth, clientHeight = getDimensions()
 	window                    = js.Global().Get("window")
 	IsBrowser                 = true
+	IsMobile                  = false
 )
 
 func getDimensions() (int, int) {
@@ -27,6 +28,8 @@ func init() {
 		clientWidth, clientHeight = getDimensions()
 		return nil
 	}))
+
+	IsMobile = !window.Get("ontouchstart").IsUndefined()
 }
 
 func ClientSize() (int, int) {

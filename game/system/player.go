@@ -2,6 +2,7 @@ package system
 
 import (
 	"m3g4p0p/spring/game/component"
+	"m3g4p0p/spring/game/events"
 	"m3g4p0p/spring/game/util"
 
 	"github.com/yohamta/donburi"
@@ -10,24 +11,31 @@ import (
 )
 
 type PlayerSystem struct {
-	query *donburi.Query
+	query     *donburi.Query
+	isTouched bool
 }
 
-func NewPlayerSystem() PlayerSystem {
-	return PlayerSystem{donburi.NewQuery(filter.Contains(
-		component.Player,
-		component.Target,
-	))}
-}
-
-func (t PlayerSystem) Update(ecs *ecs.ECS) {
-	pos, ok := util.ActivePosition()
-
-	if !ok {
-		return
+func NewPlayerSystem() *PlayerSystem {
+	return &PlayerSystem{
+		query: donburi.NewQuery(filter.Contains(
+			component.Player,
+			component.Target,
+		)),
 	}
+}
+
+func (t *PlayerSystem) Update(ecs *ecs.ECS) {
+	pos, ok := util.TouchPosition()
 
 	for entry := range t.query.Iter(ecs.World) {
-		component.Target.SetValue(entry, pos)
+		if ok && !t.isTouched {
+			component.Target.SetValue(entry, pos)
+
+			data := component.Player.Get(entry)
+			data.Score++
+			events.ScoreEvent.Publish(ecs.World, data.Score)
+		}
+
+		t.isTouched = ok
 	}
 }
