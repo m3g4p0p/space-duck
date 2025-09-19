@@ -8,7 +8,7 @@ import (
 	"github.com/yohamta/donburi/features/transform"
 )
 
-func CreateText(
+func CreateFCT(
 	world donburi.World,
 	text string,
 	size float64,
