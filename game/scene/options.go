@@ -1,12 +1,10 @@
 package scene
 
-import "github.com/yohamta/donburi/ecs"
-
 type ManagerOption func(m *Manager)
 
-func WithScene(name string, scene *ecs.ECS) ManagerOption {
+func WithScene(name string, factory Factory) ManagerOption {
 	return func(m *Manager) {
-		m.Register(name, scene)
+		m.Register(name, factory)
 	}
 }
 

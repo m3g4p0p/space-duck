@@ -7,16 +7,19 @@ import (
 	"github.com/yohamta/donburi/features/events"
 )
 
-type Scenes map[string]*ecs.ECS
+type (
+	Factory   func() *ecs.ECS
+	Factories map[string]Factory
+)
 
 type Manager struct {
-	current *ecs.ECS
-	scenes  Scenes
-	scale   int
+	current   *ecs.ECS
+	factories Factories
+	scale     int
 }
 
 func NewManager(options ...ManagerOption) *Manager {
-	m := &Manager{scale: 1, scenes: make(Scenes)}
+	m := &Manager{scale: 1, factories: make(Factories)}
 
 	for _, opt := range options {
 		opt(m)
@@ -46,17 +49,15 @@ func (m *Manager) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHe
 
 func (m *Manager) Goto(name string) {
 	if m.current != nil {
-		m.current.Pause()
+		SwitchEvent.Unsubscribe(m.current.World, m.handleSwitchEvent)
 	}
 
-	m.current = m.scenes[name]
-	m.current.Resume()
+	m.current = m.factories[name]()
+	SwitchEvent.Subscribe(m.current.World, m.handleSwitchEvent)
 }
 
-func (m *Manager) Register(name string, scene *ecs.ECS) {
-	m.scenes[name] = scene
-	scene.Pause()
-	SwitchEvent.Subscribe(scene.World, m.handleSwitchEvent)
+func (m *Manager) Register(name string, factory Factory) {
+	m.factories[name] = factory
 }
 
 func (m *Manager) handleSwitchEvent(w donburi.World, event SwitchData) {

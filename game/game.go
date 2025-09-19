@@ -3,17 +3,16 @@ package game
 import (
 	"fmt"
 	"math/rand"
-	"sync"
 
 	"m3g4p0p/spring/game/component"
 	"m3g4p0p/spring/game/events"
 	"m3g4p0p/spring/game/factory"
+	"m3g4p0p/spring/game/scene"
 	"m3g4p0p/spring/game/system"
 	"m3g4p0p/spring/game/util"
 
 	"github.com/yohamta/donburi"
 	ecslib "github.com/yohamta/donburi/ecs"
-	eventslib "github.com/yohamta/donburi/features/events"
 	"github.com/yohamta/donburi/filter"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -29,67 +28,54 @@ const (
 
 var isBackground = filter.Contains(component.Background)
 
-type Game struct {
-	*ecslib.ECS
-	once sync.Once
-}
+func New() ebiten.Game {
+	manager := scene.NewManager()
 
-func (g *Game) Update() error {
-	g.ECS.Update()
-	eventslib.ProcessAllEvents(g.World)
-	return nil
-}
+	manager.Register("main", func() *ecslib.ECS {
+		world := donburi.NewWorld()
+		ecs := ecslib.NewECS(world)
+		ui := system.NewUISystem()
 
-func (g *Game) Draw(screen *ebiten.Image) {
-	g.ECS.Draw(screen)
-}
+		ebiten.SetWindowTitle("Space Duck")
 
-func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return outsideWidth * scale, outsideHeight * scale
-}
+		ecs.AddSystem(system.NewTargetSystem().Update)
+		ecs.AddSystem(system.NewTiltSystem().Update)
+		ecs.AddSystem(system.NewPlayerSystem().Update)
+		ecs.AddSystem(system.NewParticleSystem().Update)
+		ecs.AddSystem(system.NewProjectileSystem().Update)
+		ecs.AddSystem(ui.Update)
 
-func New() *Game {
-	world := donburi.NewWorld()
-	ecs := ecslib.NewECS(world)
-	game := &Game{ECS: ecs}
-	ui := system.NewUISystem()
+		ecs.AddRenderer(LayerMain, system.NewRenderSystem(isBackground).Draw)
+		ecs.AddRenderer(LayerMain, system.NewRenderSystem(filter.Not(isBackground)).Draw)
+		ecs.AddRenderer(LayerUI, FlushLogs)
+		ecs.AddRenderer(LayerUI, ui.Draw)
 
-	ebiten.SetWindowTitle("Space Duck")
+		if !util.IsBrowser {
+			ebiten.SetWindowSize(400, 800)
+		}
 
-	ecs.AddSystem(system.NewTargetSystem().Update)
-	ecs.AddSystem(system.NewTiltSystem().Update)
-	ecs.AddSystem(system.NewPlayerSystem().Update)
-	ecs.AddSystem(system.NewParticleSystem().Update)
-	ecs.AddSystem(system.NewProjectileSystem().Update)
-	ecs.AddSystem(ui.Update)
+		width, height := util.ClientSize()
+		for range 20 {
+			factory.CreateParticle(
+				world,
+				rand.Intn(width),
+				rand.Intn(height),
+				util.RandIntMN(2, 5),
+			)
+		}
 
-	ecs.AddRenderer(LayerMain, system.NewRenderSystem(isBackground).Draw)
-	ecs.AddRenderer(LayerMain, system.NewRenderSystem(filter.Not(isBackground)).Draw)
-	ecs.AddRenderer(LayerUI, FlushLogs)
-	ecs.AddRenderer(LayerUI, ui.Draw)
+		factory.CreatePlayer(world, util.Vec2FromInt(width/2, height/2))
 
-	if !util.IsBrowser {
-		ebiten.SetWindowSize(400, 800)
-	}
+		events.ScoreEvent.Subscribe(world, func(w donburi.World, event int) {
+			size := util.ClientSizeVec2()
+			size.X /= 2
+			size.Y -= 60
+			factory.CreateText(w, fmt.Sprint(event), 30, size)
+		})
 
-	width, height := util.ClientSize()
-	for range 20 {
-		factory.CreateParticle(
-			world,
-			rand.Intn(width),
-			rand.Intn(height),
-			util.RandIntMN(2, 5),
-		)
-	}
-
-	factory.CreatePlayer(world, util.Vec2FromInt(width/2, height/2))
-
-	events.ScoreEvent.Subscribe(world, func(w donburi.World, event int) {
-		size := util.ClientSizeVec2()
-		size.X /= 2
-		size.Y -= 60
-		factory.CreateText(w, fmt.Sprint(event), 30, size)
+		return ecs
 	})
 
-	return game
+	manager.Goto("main")
+	return manager
 }
